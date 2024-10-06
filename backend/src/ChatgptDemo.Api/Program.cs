@@ -1,4 +1,4 @@
-using Common.Core;
+using ChatgptDemo.Core;
 using NLog;
 using NLog.Web;
 

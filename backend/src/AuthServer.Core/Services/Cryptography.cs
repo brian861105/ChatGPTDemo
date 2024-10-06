@@ -1,8 +1,6 @@
-﻿
-using BCryptHelper = BCrypt.Net.BCrypt;
+﻿using BCryptHelper = BCrypt.Net.BCrypt;
 
-namespace EntrySystemDemo;
-
+namespace AuthServer.Core;
 public static class Cryptography
 {
 

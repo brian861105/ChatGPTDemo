@@ -1,12 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using NUnit.Framework;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using System.Linq;
-using System.Collections.Generic;
-using EntrySystemDemo.Services;
+using AuthServer.Core.Services;
 
 namespace EntrySystemDemoUnitTest;
 [TestFixture]

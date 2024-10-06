@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.Core\Common.Core.csproj" />
+    <ProjectReference Include="..\ChatgptDemo.Core\ChatgptDemo.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

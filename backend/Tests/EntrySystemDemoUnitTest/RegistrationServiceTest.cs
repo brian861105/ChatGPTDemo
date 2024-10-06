@@ -1,41 +1,83 @@
 ﻿using System.Threading.Tasks;
-using NUnit;
-using Moq;
+using AuthServer.Core.Interface;
 using EntrySystemDemo.Services;
-
-namespace EntrySystemDemoUnitTest;
+using NUnit.Framework;
 
 [TestFixture]
 public class RegistrationServiceTests
 {
-    private readonly Mock<IRegistrationService> _mockRegistrationService;
+    private IRegistrationService _service;
 
-    public RegistrationServiceTests()
+    [SetUp]
+    public void Setup()
     {
-        _mockRegistrationService = new Mock<IRegistrationService>();
+        _service = new RegistrationService();
     }
 
     [Test]
     public async Task RegisterUserAsync_ValidInput_ReturnsTrue()
     {
-        // Arrange
-        _mockRegistrationService.Setup(x => x.RegisterUserAsync("newUser", "new@email.com", "password123")).ReturnsAsync(true);
-
         // Act
-        var result = await _mockRegistrationService.Object.RegisterUserAsync("newUser", "new@email.com", "password123");
+        var result = await _service.RegisterUserAsync("testuser", "test@example.com", "password123");
 
         // Assert
         Assert.That(result, Is.True);
     }
 
     [Test]
-    public async Task IsUsernameAvailableAsync_AvailableUsername_ReturnsTrue()
+    public async Task RegisterUserAsync_DuplicateUsername_ReturnsFalse()
     {
         // Arrange
-        _mockRegistrationService.Setup(x => x.IsUsernameAvailableAsync("availableUser")).ReturnsAsync(true);
+        await _service.RegisterUserAsync("testuser", "test@example.com", "password123");
 
         // Act
-        var result = await _mockRegistrationService.Object.IsUsernameAvailableAsync("availableUser");
+        var result = await _service.RegisterUserAsync("testuser", "another@example.com", "password456");
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public async Task RegisterUserAsync_DuplicateEmail_ReturnsFalse()
+    {
+        // Arrange
+        await _service.RegisterUserAsync("testuser1", "test@example.com", "password123");
+
+        // Act
+        var result = await _service.RegisterUserAsync("testuser2", "test@example.com", "password456");
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public async Task IsUsernameAvailableAsync_AvailableUsername_ReturnsTrue()
+    {
+        // Act
+        var result = await _service.IsUsernameAvailableAsync("newuser");
+
+        // Assert
+        Assert.That(result, Is.True);
+    }
+
+    [Test]
+    public async Task IsUsernameAvailableAsync_UnavailableUsername_ReturnsFalse()
+    {
+        // Arrange
+        await _service.RegisterUserAsync("testuser", "test@example.com", "password123");
+
+        // Act
+        var result = await _service.IsUsernameAvailableAsync("testuser");
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public async Task IsEmailAvailableAsync_AvailableEmail_ReturnsTrue()
+    {
+        // Act
+        var result = await _service.IsEmailAvailableAsync("new@example.com");
 
         // Assert
         Assert.That(result, Is.True);
@@ -45,10 +87,10 @@ public class RegistrationServiceTests
     public async Task IsEmailAvailableAsync_UnavailableEmail_ReturnsFalse()
     {
         // Arrange
-        _mockRegistrationService.Setup(x => x.IsEmailAvailableAsync("taken@email.com")).ReturnsAsync(false);
+        await _service.RegisterUserAsync("testuser", "test@example.com", "password123");
 
         // Act
-        var result = await _mockRegistrationService.Object.IsEmailAvailableAsync("taken@email.com");
+        var result = await _service.IsEmailAvailableAsync("test@example.com");
 
         // Assert
         Assert.That(result, Is.False);

@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace EntrySystemDemo.Services;
+using AuthServer.Core.Interface;
+namespace AuthServer.Core.Services;
 
 public class LoginService : ILoginService
 {
+    // private readonly LoginServerDbContext _context;
     public static char[] SecretKey { get; set; }
 
     public async Task<bool> AuthenticateAsync(string username, string password)

@@ -1,4 +1,4 @@
-using EntrySystemDemo;
+using AuthServer.Core;
 
 namespace EntrySystemDemoUnitTest;
 

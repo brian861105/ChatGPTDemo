@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace EntrySystemDemo.Services
+﻿namespace AuthServer.Core.Interface
 {
     public interface ILoginService
     {
