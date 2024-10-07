@@ -3,6 +3,7 @@ using AuthServer.Core.Interface;
 using EntrySystemDemo.Services;
 using NUnit.Framework;
 
+namespace AuthServerUnitTest;
 [TestFixture]
 public class RegistrationServiceTests
 {

@@ -1,6 +1,6 @@
 ﻿using BCryptHelper = BCrypt.Net.BCrypt;
 
-namespace AuthServer.Core;
+namespace AuthServer.Core.Services;
 public static class Cryptography
 {
 

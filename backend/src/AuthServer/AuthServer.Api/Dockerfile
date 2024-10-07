@@ -1,17 +1,17 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 8080
+EXPOSE 5264
 
-ENV ASPNETCORE_URLS=http://+:8080
+ENV ASPNETCORE_URLS=http://+:5264
 
 USER app
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG configuration=Release
 WORKDIR /src
-COPY ["src/AuthServer.Api/AuthServer.Api.csproj", "src/AuthServer.Api/"]
-RUN dotnet restore "src/AuthServer.Api/AuthServer.Api.csproj"
+COPY ["src/AuthServer/AuthServer.Api/AuthServer.Api.csproj", "src/AuthServer/AuthServer.Api/"]
+RUN dotnet restore "src/AuthServer/AuthServer.Api/AuthServer.Api.csproj"
 COPY . .
-WORKDIR "/src/src/AuthServer.Api"
+WORKDIR "/src/src/AuthServer/AuthServer.Api"
 RUN dotnet build "AuthServer.Api.csproj" -c $configuration -o /app/build
 
 FROM build AS publish

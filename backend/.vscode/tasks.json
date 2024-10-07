@@ -46,12 +46,12 @@
             "dockerBuild": {
                 "tag": "backend:dev",
                 "target": "base",
-                "dockerfile": "${workspaceFolder}/src/AuthServer.Api/Dockerfile",
+                "dockerfile": "${workspaceFolder}/src/AuthServer/AuthServer.Api/Dockerfile",
                 "context": "${workspaceFolder}",
                 "pull": true
             },
             "netCore": {
-                "appProject": "${workspaceFolder}/src/AuthServer.Api/AuthServer.Api.csproj"
+                "appProject": "${workspaceFolder}/src/AuthServer/AuthServer.Api/AuthServer.Api.csproj"
             }
         },
         {
@@ -62,7 +62,7 @@
             ],
             "dockerBuild": {
                 "tag": "backend:latest",
-                "dockerfile": "${workspaceFolder}/src/AuthServer.Api/Dockerfile",
+                "dockerfile": "${workspaceFolder}/src/AuthServer/AuthServer.Api/Dockerfile",
                 "context": "${workspaceFolder}",
                 "platform": {
                     "os": "linux",
@@ -71,7 +71,7 @@
                 "pull": true
             },
             "netCore": {
-                "appProject": "${workspaceFolder}/src/AuthServer.Api/AuthServer.Api.csproj"
+                "appProject": "${workspaceFolder}/src/AuthServer/AuthServer.Api/AuthServer.Api.csproj"
             }
         },
         {
@@ -82,7 +82,7 @@
             ],
             "dockerRun": {},
             "netCore": {
-                "appProject": "${workspaceFolder}/src/AuthServer.Api/AuthServer.Api.csproj",
+                "appProject": "${workspaceFolder}/src/AuthServer/AuthServer.Api/AuthServer.Api.csproj",
                 "enableDebugging": true
             }
         },
@@ -94,7 +94,7 @@
             ],
             "dockerRun": {},
             "netCore": {
-                "appProject": "${workspaceFolder}/src/AuthServer.Api/AuthServer.Api.csproj"
+                "appProject": "${workspaceFolder}/src/AuthServer/AuthServer.Api/AuthServer.Api.csproj"
             }
         }
     ]
