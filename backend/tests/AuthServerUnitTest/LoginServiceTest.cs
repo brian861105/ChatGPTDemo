@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using AuthServer.Core.Interface;
 using AuthServer.Core.Services;
 using AuthServer.Infrastructure.Data.Migrations;
 using Microsoft.EntityFrameworkCore;
@@ -15,37 +16,41 @@ namespace AuthServerUnitTest
     [TestFixture]
     public class LoginServiceTests
     {
-        private Mock<IDbContextFactory<AuthDbContext>> _mockFactory;
         private Mock<AuthDbContext> _mockContext;
         private Mock<DbSet<AuthUser>> _mockUserDbSet;  // 添加這行
-        private LoginService _loginService;
+        private ILoginService _loginService;
 
 
         [SetUp]
         public void Setup()
         {
+
+            var data = new List<AuthUser>
+            {
+                new() { Username = "test1", PasswordHash = Cryptography.Encrypto("correctPassword")},
+                new() { Username = "test2", PasswordHash = Cryptography.Encrypto("incorrectPassword")},
+                new() { Username = "test3", PasswordHash = Cryptography.Encrypto("incorrectPassword")},
+            }.AsQueryable();
+
+
             _mockUserDbSet = new Mock<DbSet<AuthUser>>();
+            _mockUserDbSet.As<IQueryable<AuthUser>>().Setup(m => m.Provider).Returns(data.Provider);
+            _mockUserDbSet.As<IQueryable<AuthUser>>().Setup(m => m.Expression).Returns(data.Expression);
+            _mockUserDbSet.As<IQueryable<AuthUser>>().Setup(m => m.ElementType).Returns(data.ElementType);
+            _mockUserDbSet.As<IQueryable<AuthUser>>().Setup(m => m.GetEnumerator()).Returns(() => data.GetEnumerator());
             _mockContext = new Mock<AuthDbContext>();
-            _mockFactory = new Mock<IDbContextFactory<AuthDbContext>>();
 
             _mockContext.Setup(m => m.Users).Returns(_mockUserDbSet.Object);
-            _mockFactory.Setup(f => f.CreateDbContext()).Returns(_mockContext.Object);
 
-            _loginService = new LoginService(_mockFactory.Object);
+            _loginService = new LoginService(_mockContext.Object);
         }
 
         [Test]
         public async Task AuthenticateAsync_ValidCredentials_ReturnsTrue()
         {
             // Arrange
-            string username = "testUser";
+            string username = "test1";
             string password = "correctPassword";
-            var user = new AuthUser { Username = username, PasswordHash = BCrypt.Net.BCrypt.HashPassword(password) };
-
-            // 模擬 FirstOrDefaultAsync 方法
-            _mockUserDbSet.Setup(m => m.FirstOrDefaultAsync(It.IsAny<Expression<Func<AuthUser, bool>>>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((Expression<Func<AuthUser, bool>> predicate, CancellationToken token) =>
-                    user);
 
             // Act
             bool result = await _loginService.AuthenticateAsync(username, password);
@@ -54,21 +59,19 @@ namespace AuthServerUnitTest
             Assert.That(result, Is.True);
         }
 
-        // [Test]
-        // public async Task AuthenticateAsync_InvalidCredentials_ReturnsFalse()
-        // {
-        //     // Arrange
-        //     string username = "testUser";
-        //     string password = "wrongPassword";
-        //     var user = new AuthUser { Username = username, PasswordHash = BCrypt.Net.BCrypt.HashPassword("correctPassword") };
-        //     _mockUserDbSet.Setup(m => m.FindAsync(username)).ReturnsAsync(user);
+        [Test]
+        public async Task AuthenticateAsync_InvalidCredentials_ReturnsFalse()
+        {
+            // Arrange
+            string username = "test1";
+            string password = "wrongPassword";
 
-        //     // Act
-        //     bool result = await _loginService.AuthenticateAsync(username, password);
+            // Act
+            bool result = await _loginService.AuthenticateAsync(username, password);
 
-        //     // Assert
-        //     Assert.That(result, Is.False);
-        // }
+            // Assert
+            Assert.That(result, Is.False);
+        }
 
         // [Test]
         // public async Task GenerateJwtTokenAsync_ValidUsername_ReturnsValidToken()

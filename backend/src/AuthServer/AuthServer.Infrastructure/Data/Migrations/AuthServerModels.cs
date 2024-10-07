@@ -107,12 +107,12 @@ namespace AuthServer.Infrastructure.Data.Migrations
         public required virtual AuthRole Role { get; set; }
     }
 
-    public class AuthDbContext(DbContextOptions<AuthDbContext> options) : DbContext(options)
+    public class AuthDbContext : DbContext
     {
-        public DbSet<AuthUser> Users { get; set; }
-        public DbSet<AuthSession> Sessions { get; set; }
-        public DbSet<AuthRole> Roles { get; set; }
-        public DbSet<AuthUserRole> UserRoles { get; set; }
+        public virtual DbSet<AuthUser> Users { get; set; }
+        public virtual DbSet<AuthSession> Sessions { get; set; }
+        public virtual DbSet<AuthRole> Roles { get; set; }
+        public virtual DbSet<AuthUserRole> UserRoles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
