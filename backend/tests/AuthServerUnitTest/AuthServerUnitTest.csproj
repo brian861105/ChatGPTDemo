@@ -22,7 +22,6 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,8 +29,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\AuthServer\AuthServer.Api\AuthServer.Api.csproj" />
     <ProjectReference Include="..\..\src\AuthServer\AuthServer.Core\AuthServer.Core.csproj" />
+    <ProjectReference Include="..\..\src\AuthServer\AuthServer.Infrastructure\AuthServer.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

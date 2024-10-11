@@ -1,15 +1,14 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq.Expressions;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using System.Threading.Tasks;
 using AuthServer.Core.Interface;
+using AuthServer.Core.Model;
 using AuthServer.Core.Services;
 using AuthServer.Infrastructure.Data.Migrations;
+using AuthServer.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Moq;
-using NUnit.Framework;
 
 namespace AuthServerUnitTest
 {
@@ -19,7 +18,7 @@ namespace AuthServerUnitTest
         private Mock<AuthDbContext> _mockContext;
         private Mock<DbSet<AuthUser>> _mockUserDbSet;  // 添加這行
         private ILoginService _loginService;
-
+        private static IOptions<LoginServiceOptions> loginServiceOptions;
 
         [SetUp]
         public void Setup()
@@ -42,7 +41,15 @@ namespace AuthServerUnitTest
 
             _mockContext.Setup(m => m.Users).Returns(_mockUserDbSet.Object);
 
-            _loginService = new LoginService(_mockContext.Object);
+            var loginService = new LoginServiceOptions
+            {
+                SecretKey = "F3YiY8jbVUqgB4TiMyAZcJnLBQeXyAr9AYTN53yxwBc",
+                Issuer = "testIssuer",
+                Audience = "testAudience",
+                ExpirationHours = 1
+            };
+            loginServiceOptions = CreateLoginServiceOptions(loginService);
+            _loginService = new LoginService(_mockContext.Object, loginServiceOptions);
         }
 
         [Test]
@@ -73,48 +80,57 @@ namespace AuthServerUnitTest
             Assert.That(result, Is.False);
         }
 
-        // [Test]
-        // public async Task GenerateJwtTokenAsync_ValidUsername_ReturnsValidToken()
-        // {
-        //     // Arrange
-        //     string username = "testUser";
+        [Test]
+        public async Task GenerateJwtTokenAsync_ValidUsername_ReturnsValidToken()
+        {
+            // Arrange
+            string username = "testUser";
 
-        //     // Act
-        //     string token = await _loginService.GenerateJwtTokenAsync(username);
+            // Act
+            string token = await _loginService.GenerateJwtTokenAsync(username);
 
-        //     // Assert
-        //     Assert.That(token, Is.Not.Null);
-        //     Assert.That(IsValidJwtToken(token), Is.True);
-        //     Assert.That(GetUsernameFromToken(token), Is.EqualTo(username));
-        // }
+            Assert.Multiple(() =>
+            {
+                // Assert
+                Assert.That(token, Is.Not.Null);
+                Assert.That(IsValidJwtToken(token), Is.True);
+                Assert.That(GetUsernameFromToken(token), Is.EqualTo(username));
+            });
+        }
 
-        // private bool IsValidJwtToken(string token)
-        // {
-        //     var tokenHandler = new JwtSecurityTokenHandler();
-        //     var key = Encoding.ASCII.GetBytes(LoginService.SecretKey);
-        //     try
-        //     {
-        //         tokenHandler.ValidateToken(token, new TokenValidationParameters
-        //         {
-        //             ValidateIssuerSigningKey = true,
-        //             IssuerSigningKey = new SymmetricSecurityKey(key),
-        //             ValidateIssuer = false,
-        //             ValidateAudience = false,
-        //             ClockSkew = TimeSpan.Zero
-        //         }, out SecurityToken validatedToken);
-        //         return true;
-        //     }
-        //     catch
-        //     {
-        //         return false;
-        //     }
-        // }
 
-        // private string GetUsernameFromToken(string token)
-        // {
-        //     var tokenHandler = new JwtSecurityTokenHandler();
-        //     var jwtToken = tokenHandler.ReadJwtToken(token);
-        //     return jwtToken.Claims.First(claim => claim.Type == "username").Value;
-        // }
+        private static IOptions<LoginServiceOptions> CreateLoginServiceOptions(LoginServiceOptions loginServiceOptions)
+        {
+            return Options.Create(loginServiceOptions);
+        }
+
+        private static bool IsValidJwtToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(loginServiceOptions.Value.SecretKey);
+            try
+            {
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                }, out SecurityToken validatedToken);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static string GetUsernameFromToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadJwtToken(token);
+            return jwtToken.Claims.First(claim => claim.Type == "sub").Value;
+        }
     }
 }

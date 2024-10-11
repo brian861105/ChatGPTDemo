@@ -38,43 +38,6 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "type": "docker-build",
-            "label": "docker-build: debug",
-            "dependsOn": [
-                "build"
-            ],
-            "dockerBuild": {
-                "tag": "backend:dev",
-                "target": "base",
-                "dockerfile": "${workspaceFolder}/src/AuthServer.Api/Dockerfile",
-                "context": "${workspaceFolder}",
-                "pull": true
-            },
-            "netCore": {
-                "appProject": "${workspaceFolder}/src/AuthServer.Api/AuthServer.Api.csproj"
-            }
-        },
-        {
-            "type": "docker-build",
-            "label": "docker-build: release",
-            "dependsOn": [
-                "build"
-            ],
-            "dockerBuild": {
-                "tag": "backend:latest",
-                "dockerfile": "${workspaceFolder}/src/AuthServer.Api/Dockerfile",
-                "context": "${workspaceFolder}",
-                "platform": {
-                    "os": "linux",
-                    "architecture": "amd64"
-                },
-                "pull": true
-            },
-            "netCore": {
-                "appProject": "${workspaceFolder}/src/AuthServer.Api/AuthServer.Api.csproj"
-            }
-        },
-        {
             "type": "docker-run",
             "label": "docker-run: debug",
             "dependsOn": [
@@ -82,7 +45,7 @@
             ],
             "dockerRun": {},
             "netCore": {
-                "appProject": "${workspaceFolder}/src/AuthServer.Api/AuthServer.Api.csproj",
+                "appProject": "${workspaceFolder}/src/AuthServer/AuthServer.Api/AuthServer.Api.csproj",
                 "enableDebugging": true
             }
         },
@@ -94,7 +57,44 @@
             ],
             "dockerRun": {},
             "netCore": {
-                "appProject": "${workspaceFolder}/src/AuthServer.Api/AuthServer.Api.csproj"
+                "appProject": "${workspaceFolder}/src/AuthServer/AuthServer.Api/AuthServer.Api.csproj"
+            }
+        },
+        {
+            "type": "docker-build",
+            "label": "docker-build: debug",
+            "dependsOn": [
+                "build"
+            ],
+            "dockerBuild": {
+                "tag": "backend:dev",
+                "target": "base",
+                "dockerfile": "${workspaceFolder}/src/AuthServer/AuthServer.Api/Dockerfile",
+                "context": "${workspaceFolder}",
+                "pull": true
+            },
+            "netCore": {
+                "appProject": "${workspaceFolder}/src/AuthServer/AuthServer.Api/AuthServer.Api.csproj"
+            }
+        },
+        {
+            "type": "docker-build",
+            "label": "docker-build: release",
+            "dependsOn": [
+                "build"
+            ],
+            "dockerBuild": {
+                "tag": "backend:latest",
+                "dockerfile": "${workspaceFolder}/src/AuthServer/AuthServer.Api/Dockerfile",
+                "context": "${workspaceFolder}",
+                "platform": {
+                    "os": "linux",
+                    "architecture": "amd64"
+                },
+                "pull": true
+            },
+            "netCore": {
+                "appProject": "${workspaceFolder}/src/AuthServer/AuthServer.Api/AuthServer.Api.csproj"
             }
         }
     ]
