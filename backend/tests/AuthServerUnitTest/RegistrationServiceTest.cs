@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
+using AuthServer.Core.Services;
 using AuthServer.Core.Interface;
-using EntrySystemDemo.Services;
 using NUnit.Framework;
 
 namespace AuthServerUnitTest;
