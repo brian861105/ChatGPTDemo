@@ -32,12 +32,18 @@ namespace AuthServerUnitTest
             }.AsQueryable();
 
 
+            // Create a mock DbContextOptions
+            var options = new DbContextOptionsBuilder<AuthDbContext>()
+                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .Options;
+
+
             _mockUserDbSet = new Mock<DbSet<AuthUser>>();
             _mockUserDbSet.As<IQueryable<AuthUser>>().Setup(m => m.Provider).Returns(data.Provider);
             _mockUserDbSet.As<IQueryable<AuthUser>>().Setup(m => m.Expression).Returns(data.Expression);
             _mockUserDbSet.As<IQueryable<AuthUser>>().Setup(m => m.ElementType).Returns(data.ElementType);
             _mockUserDbSet.As<IQueryable<AuthUser>>().Setup(m => m.GetEnumerator()).Returns(() => data.GetEnumerator());
-            _mockContext = new Mock<AuthDbContext>();
+            _mockContext = new Mock<AuthDbContext>(options);
 
             _mockContext.Setup(m => m.Users).Returns(_mockUserDbSet.Object);
 

@@ -17,14 +17,11 @@ public class LoginService(AuthDbContext context, IOptions<LoginServiceOptions> o
     public async Task<bool> AuthenticateAsync(string username, string password)
     {
         var user = _context.Users.Where(x => x.Username == username).FirstOrDefault();
-        if (Cryptography.VerifyHash(password, user.PasswordHash))
-        {
-            return true;
-        }
-        else
+        if (user == null)
         {
             return false;
         }
+        return await Task.Run(() => Cryptography.VerifyHash(password, user.PasswordHash));
     }
 
     public async Task<string> GenerateJwtTokenAsync(string username)
@@ -34,9 +31,9 @@ public class LoginService(AuthDbContext context, IOptions<LoginServiceOptions> o
 
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, username),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.NameIdentifier, username)
+            new(JwtRegisteredClaimNames.Sub, username),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(ClaimTypes.NameIdentifier, username)
         };
 
         var token = new JwtSecurityToken(
