@@ -1,9 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using AuthServer.Core.Interface;
 using AuthServer.Core.Services;
-using AuthServer.Core.Interface;
-using NUnit.Framework;
 
-namespace AuthServerUnitTest;
+namespace AuthServerUnitTest.Services;
 [TestFixture]
 public class RegistrationServiceTests
 {

@@ -1,13 +1,11 @@
 ﻿using Moq;
 using AuthServer.Core.Interface;
 
-namespace AuthServerUnitTest;
+namespace AuthServer.UnitTests.Services;
 
 [TestFixture]
 public class PasswordResetServiceTests
 {
-
-    private IPasswordResetService _PasswordResetService;
     private readonly Mock<IPasswordResetService> _mockPasswordResetService;
 
     public PasswordResetServiceTests()
