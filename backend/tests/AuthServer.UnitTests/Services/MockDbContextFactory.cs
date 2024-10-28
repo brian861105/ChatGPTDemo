@@ -36,7 +36,7 @@ public class MockDbContextFactory
                 new() { Username = "test3", PasswordHash = Cryptography.Encrypto("incorrectPassword"), Email = "bvalid@email.com"},
             ];
 
-        var (mockContext, mockDbSet) = CreateMockDbContext(users);
+        var (mockContext, mockDbSet) = CreateMockDbContext<AuthUser>(users);
         mockContext.Setup(m => m.Users).Returns(mockDbSet.Object);
 
         return (mockContext, mockDbSet);
