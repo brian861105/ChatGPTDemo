@@ -18,8 +18,8 @@ namespace AuthServer.Infrastructure.Data.Migrations
         [Required]
         [StringLength(255)]
         public required string PasswordHash { get; set; }
-        [Required]
         [StringLength(255)]
+        public string ResetToken { get; set; }
         public string? Email { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
