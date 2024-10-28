@@ -8,7 +8,7 @@
 
     public interface IRegistrationService
     {
-        Task<bool> RegisterUserAsync(string username, string email, string password);
+        Task<(bool Success, string Message)> RegisterUserAsync(string username, string email, string password);
         Task<bool> IsUsernameAvailableAsync(string username);
         Task<bool> IsEmailAvailableAsync(string email);
     }
@@ -16,8 +16,8 @@
     public interface IPasswordResetService
     {
         Task<bool> InitiatePasswordResetAsync(string email);
-        Task<bool> ValidateResetTokenAsync(string token);
-        Task<bool> ResetPasswordAsync(string token, string newPassword);
+        Task<bool> ValidateResetTokenAsync(string email, string token);
+        Task<bool> ResetPasswordAsync(string email, string token, string newPassword);
     }
 
     public interface IAuthService : ILoginService, IRegistrationService, IPasswordResetService

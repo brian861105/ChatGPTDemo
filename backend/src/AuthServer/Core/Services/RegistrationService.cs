@@ -14,7 +14,7 @@ public class RegistrationService : IRegistrationService
         throw new NotImplementedException();
     }
 
-    Task<bool> IRegistrationService.RegisterUserAsync(string username, string email, string password)
+    Task<(bool Success, string Message)> IRegistrationService.RegisterUserAsync(string username, string email, string password)
     {
         throw new NotImplementedException();
     }
