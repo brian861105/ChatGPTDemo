@@ -17,15 +17,18 @@ namespace AuthServer.Infrastructure.Data.Migrations
         public required string Username { get; set; }
         [Required]
         [StringLength(255)]
-        public required string PasswordHash { get; set; }
+        public required string? PasswordHash { get; set; }
+        [Required]
         [StringLength(255)]
-        public string ResetToken { get; set; }
-        public string? Email { get; set; }
+        public required string Email { get; set; }
+        [StringLength(255)]
+        public string? ResetToken { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
 
         public virtual ICollection<AuthSession>? Sessions { get; set; }
         public virtual ICollection<AuthUserRole>? UserRoles { get; set; }
+        public DateTime? ResetTokenExpires { get; set; }
     }
     public class UserProfile
     {
