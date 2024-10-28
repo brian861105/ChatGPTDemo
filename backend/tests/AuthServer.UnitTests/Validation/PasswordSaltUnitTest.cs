@@ -1,7 +1,7 @@
 using AuthServer.Core;
 using AuthServer.Core.Services;
 
-namespace AuthServerUnitTest;
+namespace AuthServer.UnitTests.Validation;
 
 public class PasswordCryptoUnitTest
 {

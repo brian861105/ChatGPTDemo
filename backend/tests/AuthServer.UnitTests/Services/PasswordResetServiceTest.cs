@@ -6,21 +6,19 @@ namespace AuthServer.UnitTests.Services;
 [TestFixture]
 public class PasswordResetServiceTests
 {
-    private readonly Mock<IPasswordResetService> _mockPasswordResetService;
+    private readonly IPasswordResetService _PasswordResetService;
 
     public PasswordResetServiceTests()
     {
-        _mockPasswordResetService = new Mock<IPasswordResetService>();
+        _PasswordResetService = new MockPasswordResetService();
     }
 
     [Test]
     public async Task InitiatePasswordResetAsync_ValidEmail_ReturnsTrue()
     {
         // Arrange
-        _mockPasswordResetService.Setup(x => x.InitiatePasswordResetAsync("valid@email.com")).ReturnsAsync(true);
-
         // Act
-        var result = await _mockPasswordResetService.Object.InitiatePasswordResetAsync("valid@email.com");
+        var result = await _PasswordResetService.InitiatePasswordResetAsync("valid@email.com");
 
         // Assert
         Assert.That(result, Is.True);
@@ -30,10 +28,8 @@ public class PasswordResetServiceTests
     public async Task ValidateResetTokenAsync_ValidToken_ReturnsTrue()
     {
         // Arrange
-        _mockPasswordResetService.Setup(x => x.ValidateResetTokenAsync("validToken")).ReturnsAsync(true);
-
         // Act
-        var result = await _mockPasswordResetService.Object.ValidateResetTokenAsync("validToken");
+        var result = await _PasswordResetService.ValidateResetTokenAsync("valid@email.com", "validToken");
 
         // Assert
         Assert.That(result, Is.True);
@@ -43,10 +39,8 @@ public class PasswordResetServiceTests
     public async Task ResetPasswordAsync_ValidTokenAndPassword_ReturnsTrue()
     {
         // Arrange
-        _mockPasswordResetService.Setup(x => x.ResetPasswordAsync("validToken", "newPassword123")).ReturnsAsync(true);
-
         // Act
-        var result = await _mockPasswordResetService.Object.ResetPasswordAsync("validToken", "newPassword123");
+        var result = await _PasswordResetService.ResetPasswordAsync("valid@email.com", "validToken", "newPassword123");
 
         // Assert
         Assert.That(result, Is.True);

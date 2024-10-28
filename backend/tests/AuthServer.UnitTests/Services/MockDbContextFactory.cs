@@ -27,13 +27,13 @@ public class MockDbContextFactory
         return (mockContext, mockDbSet);
     }
 
-    public static (Mock<AuthDbContext> mockContext, Mock<DbSet<AuthUser>> mockDbSet) CreateMockAuthDbContext(IEnumerable<AuthUser> users = null)
+    public static (Mock<AuthDbContext> mockContext, Mock<DbSet<AuthUser>> mockDbSet) CreateMockAuthDbContext(IEnumerable<AuthUser>? users = null)
     {
         users ??=
             [
-                new() { Username = "test1", PasswordHash = Cryptography.Encrypto("correctPassword")},
-                new() { Username = "test2", PasswordHash = Cryptography.Encrypto("incorrectPassword")},
-                new() { Username = "test3", PasswordHash = Cryptography.Encrypto("incorrectPassword")},
+                new() { Username = "test1", PasswordHash = Cryptography.Encrypto("correctPassword"), Email ="valid@email.com"},
+                new() { Username = "test2", PasswordHash = Cryptography.Encrypto("incorrectPassword"), Email = "avalid@email.com"},
+                new() { Username = "test3", PasswordHash = Cryptography.Encrypto("incorrectPassword"), Email = "bvalid@email.com"},
             ];
 
         var (mockContext, mockDbSet) = CreateMockDbContext(users);
