@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthServer", "src\AuthServe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthServer.UnitTests", "tests\AuthServer.UnitTests\AuthServer.UnitTests.csproj", "{9115B37D-279B-4A9C-BCEB-B216022D7761}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthServer.Api", "src\AuthServer.Api\AuthServer.Api.csproj", "{974E45D1-18EF-49CE-AB75-6B9CD798A128}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{9115B37D-279B-4A9C-BCEB-B216022D7761}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9115B37D-279B-4A9C-BCEB-B216022D7761}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9115B37D-279B-4A9C-BCEB-B216022D7761}.Release|Any CPU.Build.0 = Release|Any CPU
+		{974E45D1-18EF-49CE-AB75-6B9CD798A128}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{974E45D1-18EF-49CE-AB75-6B9CD798A128}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{974E45D1-18EF-49CE-AB75-6B9CD798A128}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{974E45D1-18EF-49CE-AB75-6B9CD798A128}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,5 +38,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{DF497779-FE6B-4A9A-A1CB-7A2DE9556E8E} = {3930D28E-F835-4A30-B1FC-86276F8B573B}
 		{9115B37D-279B-4A9C-BCEB-B216022D7761} = {E60A4DEC-B3CD-4746-9864-CFC77773A889}
+		{974E45D1-18EF-49CE-AB75-6B9CD798A128} = {3930D28E-F835-4A30-B1FC-86276F8B573B}
 	EndGlobalSection
 EndGlobal
