@@ -9,7 +9,7 @@ const router = createRouter({
       component: AppLayout,
       children : [
         {
-          path: '/',
+          path: '/home',
           name: 'Home',
           component: () => import('@/views/Home.vue')
         }
@@ -19,7 +19,18 @@ const router = createRouter({
       path: '/auth/login',
       name: 'Login',
       component: () => import('@/views/auth/Login.vue')
-    }
+    },
+    {
+      path: '/auth/signup',
+      name: 'SignUp',
+      component: () => import('@/views/auth/SignUp.vue')
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: () => import('@/views/NotFound.vue')
+    },
+
   ]
 });
 

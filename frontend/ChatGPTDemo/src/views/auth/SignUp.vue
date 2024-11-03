@@ -1,16 +1,20 @@
 <script setup>
     import InputText from 'primevue/inputtext';
     import Password from 'primevue/password';
-    import Checkbox from 'primevue/checkbox';
     import Button from 'primevue/button';
+    
+
     import { ref } from 'vue';
     
-    const email = ref('');
-    const pwd = ref('');
+    const  firstName = ref(''), lastName = ref(''), email = ref(''), pwd = ref(''), pwdChk = ref('');
 
-    const checked = ref(false);
+    function register(){
+        // do the register process
+    }
+
 
 </script>
+
 <template>
     <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
         <div class="flex flex-col items-center justify-center">
@@ -35,35 +39,42 @@
                                 />
                             </g>
                         </svg> -->
-                        <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to ChatGPTDemo !</div>
-                        <span class="text-muted-color font-medium">Log in to continue</span>
+                        <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Register</div>
                     </div>
 
                     <div>
-                        <label for="email1" class="block text-surface-900 dark:text-surface-0 text-base font-medium mb-2">Email</label>
-                        <InputText id="email1" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8" v-model="email" />
+                        <label for="firstName" class="block text-surface-900 dark:text-surface-0 text-base font-medium mb-2">First Name</label>
+                        <InputText id="firstName" type="text" placeholder="First Name" class="w-full md:w-[30rem] mb-8" v-model="firstName" />
 
-                        <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-base mb-2">Password</label>
-                        <Password id="password1" v-model="pwd" placeholder="Password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
+                        <label for="lastName" class="block text-surface-900 dark:text-surface-0 text-base font-medium mb-2">Last Name</label>
+                        <InputText id="lastName" type="text" placeholder="Last Name" class="w-full md:w-[30rem] mb-8" v-model="lastName" />
 
-                        <div class="flex items-center justify-between mt-2 mb-8 gap-8">
-                            <div class="flex items-center">
-                                <Checkbox v-model="checked" id="rememberme1" binary class="mr-2"></Checkbox>
-                                <label for="rememberme1" class="text-sm">Remember me</label>
-                            </div>
-                            <span class="font-medium text-sm no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
-                        </div>
-                        <Button label="Log In" class="w-full" as="router-link" to="/"></Button>
-                        <div class="items-center justify-between mt-3 mb-8 gap-8">
-                            <span class="font-medium no-underline text-primary">Don't have an account?</span>
-                            <span class="font-medium underline ml-2 cursor-pointer text-primary">
-                                <router-link to="/auth/signup">Sign up!</router-link>
+                        <label for="email" class="block text-surface-900 dark:text-surface-0 text-base font-medium mb-2">Email</label>
+                        <InputText id="email" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8" v-model="email" />
+
+                        <label for="pwd" class="block text-surface-900 dark:text-surface-0 font-medium text-base mb-2">Password</label>
+                        <Password id="pwd" v-model="pwd" placeholder="Password" :toggleMask="true" class="mb-8" fluid :feedback="false"></Password>
+
+                        <label for="pwdChk" class="block text-surface-900 dark:text-surface-0 font-medium text-base mb-2">Enter Password Again</label>
+                        <Password id="pwdChk" v-model="pwdChk" placeholder="Password" :toggleMask="true" class="mb-8" fluid :feedback="false"></Password>
+
+                        <div class="mb-4">
+                            <span class="font-medium no-underline text-primary ">By signing up, I agree to ChatGPTDemo's </span>
+                            <span class="font-medium text-primary underline cursor-pointer ">
+                                <router-link >Privacy</router-link>
                             </span>
-                            
+                            <span class="font-medium no-underline text-primary"> & </span>
+                            <span class="font-medium text-primary underline cursor-pointer">
+                                <router-link >Terms.</router-link>
+                            </span>
                         </div>
+
+                        <Button label="Sign Up" class="w-full" @click="register"></Button>
+                            
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </template>
