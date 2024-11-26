@@ -2,15 +2,35 @@
     import InputText from 'primevue/inputtext';
     import Password from 'primevue/password';
     import Button from 'primevue/button';
+    import Message from 'primevue/message';
+    import { useForm } from 'vee-validate';
     
 
     import { ref } from 'vue';
     
-    const  firstName = ref(''), lastName = ref(''), email = ref(''), pwd = ref(''), pwdChk = ref('');
+    const  lastName = ref(''),
+           pwd = ref(''), 
+           pwdChk = ref('');
+
+
+    function isEmail(value){
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    }
+           
+    const {values, errors, defineField} = useForm({
+        validationSchema: {
+            email : val => (isEmail(val) ? true : 'Invalid email'),
+            firstName : val => (isEmail(val) ? true : 'Invalid email'),
+        }
+    });
+    const [email, emailAttrs] = defineField('email',{validateOnModelUpdate: false,});
+    const [firstName, firstNameAttrs] = defineField('firstName');
 
     function register(){
         // do the register process
     }
+
+
 
 
 </script>
@@ -44,13 +64,15 @@
 
                     <div>
                         <label for="firstName" class="block text-surface-900 dark:text-surface-0 text-base font-medium mb-2">First Name</label>
-                        <InputText id="firstName" type="text" placeholder="First Name" class="w-full md:w-[30rem] mb-8" v-model="firstName" />
+                        <InputText id="firstName" type="text" placeholder="First Name" class="w-full md:w-[30rem] mb-8" v-model="firstName" v-bind="firstNameAttrs"/>
+                        <Message v-if="errors.firstName" severity="error" variant="simple" size="small">{{errors.firstName}}</Message>
 
                         <label for="lastName" class="block text-surface-900 dark:text-surface-0 text-base font-medium mb-2">Last Name</label>
                         <InputText id="lastName" type="text" placeholder="Last Name" class="w-full md:w-[30rem] mb-8" v-model="lastName" />
 
                         <label for="email" class="block text-surface-900 dark:text-surface-0 text-base font-medium mb-2">Email</label>
-                        <InputText id="email" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8" v-model="email" />
+                        <InputText id="email" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8" v-model="email" v-bind="emailAttrs" />
+                        <Message v-if="errors.email" severity="error" variant="simple" size="small">{{errors.email}}</Message>
 
                         <label for="pwd" class="block text-surface-900 dark:text-surface-0 font-medium text-base mb-2">Password</label>
                         <Password id="pwd" v-model="pwd" placeholder="Password" :toggleMask="true" class="mb-8" fluid :feedback="false"></Password>
