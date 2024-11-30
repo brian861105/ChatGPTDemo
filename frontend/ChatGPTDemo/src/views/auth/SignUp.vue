@@ -4,27 +4,44 @@
     import Button from 'primevue/button';
     import Message from 'primevue/message';
     import { useForm } from 'vee-validate';
+    import { toTypedSchema } from '@vee-validate/yup';
+    import * as yup from 'yup';
     
-
     import { ref } from 'vue';
-    
-    const  lastName = ref(''),
-           pwd = ref(''), 
-           pwdChk = ref('');
 
-
-    function isEmail(value){
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
-    }
+    // --- validation ----
+    // validate by defined rule fn
+    // function isEmail(value){
+    //     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+    // }
            
+    // const {values, errors, defineField} = useForm({
+    //     validationSchema: {
+    //         email : val => (isEmail(val) ? true : 'Invalid email'),
+    //         firstName : val => (isEmail(val) ? true : 'Invalid email'),
+    //     }
+    // });
+
+    // validate by yup
+    const schema = toTypedSchema(
+        yup.object({
+            email: yup.string().required().email(),
+            firstName: yup.string().required('Regired field'),
+            lastName: yup.string().required('Regired field'),
+            pwd: yup.string().required('Password is reqired').min(8),
+            pwdChk: yup.string().required('Please Enter the password again'),
+        })
+    );
+
     const {values, errors, defineField} = useForm({
-        validationSchema: {
-            email : val => (isEmail(val) ? true : 'Invalid email'),
-            firstName : val => (isEmail(val) ? true : 'Invalid email'),
-        }
+        validationSchema: schema,
     });
-    const [email, emailAttrs] = defineField('email',{validateOnModelUpdate: false,});
+
     const [firstName, firstNameAttrs] = defineField('firstName');
+    const [lastName, lastNameAttrs ] = defineField('lastName');
+    const [email, emailAttrs] = defineField('email',{validateOnModelUpdate: false,});
+    const [pwd, pwdAttrs] = defineField('pwd',{validateOnModelUpdate: false,});
+    const [pwdChk, pwdChkAttrs] = defineField('pwdChk',{validateOnModelUpdate: false,});
 
     function register(){
         // do the register process
@@ -63,22 +80,35 @@
                     </div>
 
                     <div>
-                        <label for="firstName" class="block text-surface-900 dark:text-surface-0 text-base font-medium mb-2">First Name</label>
-                        <InputText id="firstName" type="text" placeholder="First Name" class="w-full md:w-[30rem] mb-8" v-model="firstName" v-bind="firstNameAttrs"/>
-                        <Message v-if="errors.firstName" severity="error" variant="simple" size="small">{{errors.firstName}}</Message>
+                        <div class="mb-8">
+                            <label for="firstName" class="block text-surface-900 dark:text-surface-0 text-base font-medium mb-2">First Name</label>
+                            <InputText id="firstName" type="text" placeholder="First Name" class="w-full md:w-[30rem] " v-model="firstName" v-bind="firstNameAttrs"/>
+                            <Message v-if="errors.firstName" severity="error" variant="simple" size="small">{{errors.firstName}}</Message>
+                        </div>
 
-                        <label for="lastName" class="block text-surface-900 dark:text-surface-0 text-base font-medium mb-2">Last Name</label>
-                        <InputText id="lastName" type="text" placeholder="Last Name" class="w-full md:w-[30rem] mb-8" v-model="lastName" />
+                        <div class="mb-8">
+                            <label for="lastName" class="block text-surface-900 dark:text-surface-0 text-base font-medium mb-2">Last Name</label>
+                            <InputText id="lastName" type="text" placeholder="Last Name" class="w-full md:w-[30rem]" v-model="lastName" v-bind="lastNameAttrs"/>
+                            <Message v-if="errors.lastName" severity="error" variant="simple" size="small">{{errors.lastName}}</Message>
+                        </div>
 
-                        <label for="email" class="block text-surface-900 dark:text-surface-0 text-base font-medium mb-2">Email</label>
-                        <InputText id="email" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8" v-model="email" v-bind="emailAttrs" />
-                        <Message v-if="errors.email" severity="error" variant="simple" size="small">{{errors.email}}</Message>
+                        <div class="mb-8">
+                            <label for="email" class="block text-surface-900 dark:text-surface-0 text-base font-medium mb-2">Email</label>
+                            <InputText id="email" type="text" placeholder="Email address" class="w-full md:w-[30rem]" v-model="email" v-bind="emailAttrs" />
+                            <Message v-if="errors.email" severity="error" variant="simple" size="small">{{errors.email}}</Message>
+                        </div>
 
-                        <label for="pwd" class="block text-surface-900 dark:text-surface-0 font-medium text-base mb-2">Password</label>
-                        <Password id="pwd" v-model="pwd" placeholder="Password" :toggleMask="true" class="mb-8" fluid :feedback="false"></Password>
+                        <div class="mb-8">
+                            <label for="pwd" class="block text-surface-900 dark:text-surface-0 font-medium text-base mb-2">Password</label>
+                            <Password id="pwd" v-model="pwd" placeholder="Password" :toggleMask="true" fluid :feedback="false" v-bind="pwdAttrs"></Password>
+                            <Message v-if="errors.pwd" severity="error" variant="simple" size="small">{{errors.pwd}}</Message>
+                        </div>
 
-                        <label for="pwdChk" class="block text-surface-900 dark:text-surface-0 font-medium text-base mb-2">Enter Password Again</label>
-                        <Password id="pwdChk" v-model="pwdChk" placeholder="Password" :toggleMask="true" class="mb-8" fluid :feedback="false"></Password>
+                        <div class="mb-8">
+                            <label for="pwdChk" class="block text-surface-900 dark:text-surface-0 font-medium text-base mb-2">Enter Password Again</label>
+                            <Password id="pwdChk" v-model="pwdChk" placeholder="Password" :toggleMask="true" fluid :feedback="false" v-bind="pwdChkAttrs"></Password>
+                            <Message v-if="errors.pwdChk" severity="error" variant="simple" size="small">{{errors.pwdChk}}</Message>
+                        </div>
 
                         <div class="mb-4">
                             <span class="font-medium no-underline text-primary ">By signing up, I agree to ChatGPTDemo's </span>
