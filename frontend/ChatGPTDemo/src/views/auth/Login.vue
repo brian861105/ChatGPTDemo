@@ -3,12 +3,31 @@
     import Password from 'primevue/password';
     import Checkbox from 'primevue/checkbox';
     import Button from 'primevue/button';
-    import { ref } from 'vue';
-    
-    const email = ref('');
-    const pwd = ref('');
+    import { useForm } from 'vee-validate';
+    import { toTypedSchema } from '@vee-validate/yup';
+    import * as yup from 'yup';
+    import { emailRule, pwdRule } from '../../assets/validationRule';
 
-    const checked = ref(false);
+    // --- validation ---
+    const schema = toTypedSchema(
+        yup.object({
+            email: emailRule,
+            pwd: pwdRule,
+        })
+    );
+
+    const { values, errors, defineField, handleSubmit} = useForm({
+        validationSchema: schema,
+    });
+    
+    const [email, emailAttrs] = defineField('email');
+    const [pwd, pwdAttrs] = defineField('pwd');
+    
+    const login = handleSubmit((values) => {
+        alert('Submit!!!');
+
+        // call API
+    });
 
 </script>
 <template>
@@ -40,11 +59,17 @@
                     </div>
 
                     <div>
-                        <label for="email1" class="block text-surface-900 dark:text-surface-0 text-base font-medium mb-2">Email</label>
-                        <InputText id="email1" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8" v-model="email" />
+                        <div class="mb-8">
+                            <label for="email1" class="block text-surface-900 dark:text-surface-0 text-base font-medium mb-2">Email</label>
+                            <InputText id="email1" type="text" placeholder="Email address" class="w-full md:w-[30rem]" v-model="email" v-bind="emailAttrs"/>
+                            <div><span v-if="errors.email" class="errorMsg">{{errors.email}}</span></div>
+                        </div>
 
-                        <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-base mb-2">Password</label>
-                        <Password id="password1" v-model="pwd" placeholder="Password" :toggleMask="true" class="mb-4" fluid :feedback="false"></Password>
+                        <div>
+                            <label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-base mb-2">Password</label>
+                            <Password id="password1" placeholder="Password" :toggleMask="true"  fluid :feedback="false" v-model="pwd" v-bind="pwdAttrs"></Password>
+                            <div class="mb-8"><span v-if="errors.pwd" class="errorMsg">{{errors.pwd}}</span></div>
+                        </div>
 
                         <div class="flex items-center justify-between mt-2 mb-8 gap-8">
                             <div class="flex items-center">
@@ -53,7 +78,7 @@
                             </div>
                             <span class="font-medium text-sm no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
                         </div>
-                        <Button label="Log In" class="w-full" as="router-link" to="/"></Button>
+                        <Button label="Log In" class="w-full" @click="login"></Button>
                         <div class="items-center justify-between mt-3 mb-8 gap-8">
                             <span class="font-medium no-underline text-primary">Don't have an account?</span>
                             <span class="font-medium underline ml-2 cursor-pointer text-primary">
@@ -67,3 +92,13 @@
         </div>
     </div>
 </template>
+
+<style scoped>
+
+.errorMsg{
+    color: red;
+    font-size: small;
+}
+
+
+</style>

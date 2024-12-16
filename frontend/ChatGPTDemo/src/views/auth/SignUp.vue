@@ -5,8 +5,8 @@
     import { useForm } from 'vee-validate';
     import { toTypedSchema } from '@vee-validate/yup';
     import * as yup from 'yup';
-    
-    import { ref } from 'vue';
+    import { emailRule, pwdRule, pwdConfirmRule, nameRule} from '../../assets/validationRule';
+
 
     // --- validation ----
     // validate by defined rule fn
@@ -24,37 +24,42 @@
     // validate by yup
     const schema = toTypedSchema(
         yup.object({
-            email: yup.string().required().email('Must be valid eamil'),
-            firstName: yup.string().required('Regired field'),
-            lastName: yup.string().required('Regired field'),
-            pwd: yup.string().required('Password is reqired').min(8),
-            pwdChk: yup.string().required('Please Enter the password again')
-                        .test({
-                            name: 'repeat-pwd',
-                            test(value, ctx){
-                                if(value !== pwd.value) {
-                                    return ctx.createError({message: 'Not the same as input password'});
-                                }
-                                return true;
-                            },
-                        }),
+            email: emailRule,
+            firstName: nameRule,
+            lastName: nameRule,
+            pwd: pwdRule,
+            pwdConfirm: pwdConfirmRule,
+                        // // custom method
+                        // .test({
+                        //     name: 'repeat-pwd',
+                        //     test(value, ctx){
+                        //         if(value !== pwd.value) {
+                        //             return ctx.createError({message: 'Not the same as input password'});
+                        //         }
+                        //         return true;
+                        //     },
+                        // }),
         })
     );
 
-    const {values, errors, defineField} = useForm({
+    const {values, errors, defineField, handleSubmit} = useForm({
         validationSchema: schema,
     });
 
     const [firstName, firstNameAttrs] = defineField('firstName');
-    const [lastName, lastNameAttrs ] = defineField('lastName');
+    const [lastName, lastNameAttrs] = defineField('lastName');
     const [email, emailAttrs] = defineField('email',{validateOnModelUpdate: false,});
     const [pwd, pwdAttrs] = defineField('pwd',{validateOnModelUpdate: false,});
-    const [pwdChk, pwdChkAttrs] = defineField('pwdChk',{validateOnModelUpdate: false,});
+    const [pwdConfirm, pwdConfirmAttrs] = defineField('pwdConfirm',{validateOnModelUpdate: false,});
 
 
-    function register(){
-        // do the register process
-    }
+    const register = handleSubmit((values) => {
+        alert(JSON.stringify(values, null, 2));
+
+        // call API
+
+
+    });
 
 
 
@@ -91,7 +96,7 @@
                     <div>
                         <div class="mb-8">
                             <label for="firstName" class="block text-surface-900 dark:text-surface-0 text-base font-medium mb-2">First Name</label>
-                            <InputText id="firstName" type="text" placeholder="First Name" class="w-full md:w-[30rem] " v-model="firstName" v-bind="firstNameAttrs"/>
+                            <InputText id="firstName" type="text" placeholder="First Name" class="w-full md:w-[30rem] " v-model="firstName" v-bind="firstNameAttrs" />
                             <!--
                             <Message v-if="errors.firstName" severity="error" variant="simple" size="small">{{errors.firstName}}</Message>-->
                             <div><span v-if="errors.firstName" class="errorMsg" >{{errors.firstName}}</span></div>
@@ -117,9 +122,9 @@
                         </div>
 
                         <div class="mb-8">
-                            <label for="pwdChk" class="block text-surface-900 dark:text-surface-0 font-medium text-base mb-2">Enter Password Again</label>
-                            <Password id="pwdChk" v-model="pwdChk" placeholder="Password" :toggleMask="true" fluid :feedback="false" v-bind="pwdChkAttrs"></Password>
-                            <div><span v-if="errors.pwdChk" class="errorMsg">{{errors.pwdChk}}</span></div>
+                            <label for="pwdConfirm" class="block text-surface-900 dark:text-surface-0 font-medium text-base mb-2">Enter Password Again</label>
+                            <Password id="pwdConfirm" v-model="pwdConfirm" placeholder="Password" :toggleMask="true" fluid :feedback="false" v-bind="pwdConfirmAttrs"></Password>
+                            <div><span v-if="errors.pwdConfirm" class="errorMsg">{{errors.pwdConfirm}}</span></div>
                         </div>
 
                         <div class="mb-4">
