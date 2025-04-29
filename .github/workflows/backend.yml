@@ -22,15 +22,6 @@ on:
         required: false
         type: boolean
         default: false
-      logLevel:
-        description: 'Log level'
-        required: true
-        default: 'warning'
-        type: choice
-        options:
-        - info
-        - warning
-        - debug
 
 jobs:
   test:
