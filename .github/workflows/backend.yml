@@ -40,9 +40,32 @@ jobs:
       run: dotnet restore
     - name: Build
       run: dotnet build --no-restore --configuration Release
-    - name: Test
-      run: dotnet test --no-build --verbosity normal --configuration Release
-  
+    
+    - name: Install ReportGenerator
+      run: dotnet tool install --global dotnet-reportgenerator-globaltool
+    
+    - name: Run Tests with Coverage
+      run: ./test.sh
+    
+    # 生成 Markdown 摘要以顯示在 GitHub Actions 摘要頁面
+    - name: Generate Markdown Summary
+      run: |
+        reportgenerator \
+        -reports:"AuthServer/AuthServer.Tests/coverage.cobertura.xml" \
+        -targetdir:"coveragereport_md" \
+        -reporttypes:MarkdownSummary
+    
+    # 將摘要添加到 GitHub Actions 工作流程摘要
+    - name: Add Coverage Summary to Job Summary
+      run: cat coveragereport_md/Summary.md >> $GITHUB_STEP_SUMMARY
+    
+    # 上傳 HTML 覆蓋率報告作為構建產物
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: ./backend/coveragereport
+
   build-aot:
     name: AOT Compilation
     needs: test
