@@ -1,0 +1,39 @@
+services:
+  local-postgres:
+    image:  docker.io/library/postgres:14.17-bookworm
+    container_name: local-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: chatgpt
+      PGDATA: /data/postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - local-postgres:/data/postgres
+    networks:
+      chatgpt-net:
+        aliases:
+          - postgres
+  local-redis:
+    image: docker.io/library/redis:7.2.4
+    container_name: local-redis
+    ports:
+      - "6379:6379"
+      - "26379:26379"
+    networks:
+      chatgpt-net:
+        aliases:
+          - redis
+networks:
+  chatgpt-net:
+    name: chatgpt-net
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
+          gateway: 172.22.0.1
+
+volumes:
+  local-postgres:
+
