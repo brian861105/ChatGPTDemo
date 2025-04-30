@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E60A4DEC-B3CD-4746-9864-CFC77773A889}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{3930D28E-F835-4A30-B1FC-86276F8B573B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthServer", "AuthServer", "{3845A300-699A-432D-BA27-B8032F20313E}"
@@ -24,6 +22,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Infrastructure", "Shared\Shared.Infrastructure\Shared.Infrastructure.csproj", "{2200257E-95E7-496E-B312-DFC2B0E97661}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthServer.Api", "AuthServer\AuthServer.Api\AuthServer.Api.csproj", "{1BEEA7EC-88F6-45CC-A280-C9D039D34E8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthServer.Tests", "AuthServer\AuthServer.Tests\AuthServer.Tests.csproj", "{73889AA2-F4A1-44B8-AFC3-F6F31560D048}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,6 +55,10 @@ Global
 		{1BEEA7EC-88F6-45CC-A280-C9D039D34E8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BEEA7EC-88F6-45CC-A280-C9D039D34E8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BEEA7EC-88F6-45CC-A280-C9D039D34E8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73889AA2-F4A1-44B8-AFC3-F6F31560D048}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73889AA2-F4A1-44B8-AFC3-F6F31560D048}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73889AA2-F4A1-44B8-AFC3-F6F31560D048}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73889AA2-F4A1-44B8-AFC3-F6F31560D048}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,5 +73,6 @@ Global
 		{62B13D00-8942-4DAF-BEB4-FD61A18B998C} = {715D2011-5EC8-4239-A9BF-E623A5F627E3}
 		{2200257E-95E7-496E-B312-DFC2B0E97661} = {715D2011-5EC8-4239-A9BF-E623A5F627E3}
 		{1BEEA7EC-88F6-45CC-A280-C9D039D34E8A} = {3845A300-699A-432D-BA27-B8032F20313E}
+		{73889AA2-F4A1-44B8-AFC3-F6F31560D048} = {3845A300-699A-432D-BA27-B8032F20313E}
 	EndGlobalSection
 EndGlobal
