@@ -52,4 +52,5 @@ appsettings.Development.json
 
 # JetBrains Rider
 .idea
+.vscode
 No newline at end of file
