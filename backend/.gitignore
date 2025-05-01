@@ -54,3 +54,4 @@ Thumbs.db
 appsettings.Development.json
 coveragereport
 coverage.cobertura.xml
+coveragereport_md

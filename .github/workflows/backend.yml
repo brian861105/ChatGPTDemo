@@ -61,7 +61,7 @@ jobs:
     
     # 上傳 HTML 覆蓋率報告作為構建產物
     - name: Upload coverage report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: coverage-report
         path: ./backend/coveragereport
@@ -85,7 +85,7 @@ jobs:
     - name: AOT Compilation
       run: dotnet publish --configuration Release -p:PublishAot=true --self-contained true -o ../publish
     - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: aot-build
         path: ./publish/
