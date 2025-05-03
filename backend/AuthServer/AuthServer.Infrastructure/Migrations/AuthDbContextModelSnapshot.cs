@@ -22,67 +22,16 @@ namespace AuthServer.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("AuthServer.Infrastructure.Data.Models.AuthSession", b =>
+            modelBuilder.Entity("AuthServer.Domain.Entity.User", b =>
                 {
-                    b.Property<int>("SessionId")
+                    b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("session_id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SessionId"));
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("expires_at");
-
-                    b.Property<string>("IpAddress")
-                        .HasMaxLength(45)
-                        .HasColumnType("character varying(45)")
-                        .HasColumnName("ip_address");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_active");
-
-                    b.Property<string>("Token")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("token");
-
-                    b.Property<string>("UserAgent")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("user_agent");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("SessionId");
-
-                    b.HasIndex("Token");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("auth_sessions");
-                });
-
-            modelBuilder.Entity("AuthServer.Infrastructure.Data.Models.AuthUser", b =>
-                {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("user_id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
+                        .HasColumnName("create_at");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -90,15 +39,18 @@ namespace AuthServer.Infrastructure.Migrations
                         .HasColumnType("character varying(50)")
                         .HasColumnName("email");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("LastLoginAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_login_at");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("character varying(255)")
                         .HasColumnName("password_hash");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
 
                     b.HasKey("UserId");
 
@@ -156,8 +108,8 @@ namespace AuthServer.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer")
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
                     b.HasKey("ProfileId");
@@ -168,20 +120,9 @@ namespace AuthServer.Infrastructure.Migrations
                     b.ToTable("user_profiles");
                 });
 
-            modelBuilder.Entity("AuthServer.Infrastructure.Data.Models.AuthSession", b =>
-                {
-                    b.HasOne("AuthServer.Infrastructure.Data.Models.AuthUser", "User")
-                        .WithMany("Sessions")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("AuthServer.Infrastructure.Data.Models.UserProfile", b =>
                 {
-                    b.HasOne("AuthServer.Infrastructure.Data.Models.AuthUser", "User")
+                    b.HasOne("AuthServer.Domain.Entity.User", "User")
                         .WithOne("Profile")
                         .HasForeignKey("AuthServer.Infrastructure.Data.Models.UserProfile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -190,11 +131,9 @@ namespace AuthServer.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AuthServer.Infrastructure.Data.Models.AuthUser", b =>
+            modelBuilder.Entity("AuthServer.Domain.Entity.User", b =>
                 {
                     b.Navigation("Profile");
-
-                    b.Navigation("Sessions");
                 });
 #pragma warning restore 612, 618
         }

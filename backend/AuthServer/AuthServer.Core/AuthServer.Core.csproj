@@ -7,10 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="DTOs\" />
+        <Folder Include="DTOs\Responses\"/>
       <Folder Include="Interfaces\Cache\" />
       <Folder Include="Interfaces\Repositories\" />
       <Folder Include="Services\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\AuthServer.Domain\AuthServer.Domain.csproj"/>
     </ItemGroup>
 
 </Project>

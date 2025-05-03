@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AuthServer.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AuthServerInit : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,41 +16,16 @@ namespace AuthServer.Infrastructure.Migrations
                 name: "auth_users",
                 columns: table => new
                 {
-                    user_id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
                     email = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     password_hash = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    create_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    last_login_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_auth_users", x => x.user_id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "auth_sessions",
-                columns: table => new
-                {
-                    session_id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    user_id = table.Column<int>(type: "integer", nullable: false),
-                    token = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    user_agent = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
-                    ip_address = table.Column<string>(type: "character varying(45)", maxLength: 45, nullable: true),
-                    expires_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    is_active = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_auth_sessions", x => x.session_id);
-                    table.ForeignKey(
-                        name: "FK_auth_sessions_auth_users_user_id",
-                        column: x => x.user_id,
-                        principalTable: "auth_users",
-                        principalColumn: "user_id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,7 +34,7 @@ namespace AuthServer.Infrastructure.Migrations
                 {
                     profile_id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    user_id = table.Column<int>(type: "integer", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false),
                     first_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     last_name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     birth_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -81,16 +56,6 @@ namespace AuthServer.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_auth_sessions_token",
-                table: "auth_sessions",
-                column: "token");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_auth_sessions_user_id",
-                table: "auth_sessions",
-                column: "user_id");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_auth_users_email",
                 table: "auth_users",
                 column: "email",
@@ -106,9 +71,6 @@ namespace AuthServer.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "auth_sessions");
-
             migrationBuilder.DropTable(
                 name: "user_profiles");
 

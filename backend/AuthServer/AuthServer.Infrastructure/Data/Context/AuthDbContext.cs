@@ -1,3 +1,4 @@
+using AuthServer.Domain.Entity;
 using AuthServer.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
@@ -7,50 +8,33 @@ namespace AuthServer.Infrastructure.Data.Context;
 
 public class AuthDbContext(DbContextOptions<AuthDbContext> options) : DbContext(options)
 {
-    public DbSet<AuthUser> Users { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
     public DbSet<UserProfile> Profiles { get; set; } = null!;
-    public DbSet<AuthSession> Sessions { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         // 配置 AuthUser
-        modelBuilder.Entity<AuthUser>(ConfigureAuthUser);
+        modelBuilder.Entity<User>(ConfigureAuthUser);
 
         // 配置 UserProfile
         modelBuilder.Entity<UserProfile>(ConfigureUserProfile);
-
-        // 配置 AuthSession
-        modelBuilder.Entity<AuthSession>(ConfigureAuthSession);
     }
 
-    private void ConfigureAuthUser(EntityTypeBuilder<AuthUser> builder)
+    private void ConfigureAuthUser(EntityTypeBuilder<User> builder)
     {
         // 設置 Email 唯一索引
         builder.HasIndex(u => u.Email).IsUnique();
 
         // 配置一對一關聯：用戶->個人資料
         builder.HasOne(u => u.Profile).WithOne(p => p.User).HasForeignKey<UserProfile>(p => p.UserId);
-
-        // 配置一對多關聯：用戶->會話
-        builder.HasMany(u => u.Sessions)
-            .WithOne(s => s.User)
-            .HasForeignKey(s => s.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 
     private void ConfigureUserProfile(EntityTypeBuilder<UserProfile> builder)
     {
         // 在此可以添加額外的配置
         builder.HasIndex(p => p.UserId).IsUnique();
-    }
-
-    private void ConfigureAuthSession(EntityTypeBuilder<AuthSession> builder)
-    {
-        // 添加索引
-        builder.HasIndex(s => s.Token);
-        builder.HasIndex(s => s.UserId);
     }
 
     // 添加後備配置方法

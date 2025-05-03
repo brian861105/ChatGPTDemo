@@ -16,11 +16,18 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.9.0"/>
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.9.0"/>
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\AuthServer.Core\AuthServer.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Data\Migrations\"/>
+        <Folder Include="Data\Models\"/>
     </ItemGroup>
 
 </Project>

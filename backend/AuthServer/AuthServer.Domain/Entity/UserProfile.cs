@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using AuthServer.Domain.Entity;
 
 namespace AuthServer.Infrastructure.Data.Models;
 
@@ -8,7 +9,7 @@ public class UserProfile
 {
     [Key] [Column("profile_id")] public int ProfileId { get; set; }
 
-    [Required] [Column("user_id")] public int UserId { get; set; }
+    [Required] [Column("user_id")] public Guid UserId { get; set; }
 
     [Required]
     [StringLength(50)]
@@ -37,5 +38,5 @@ public class UserProfile
     [Column("updated_at")] public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     // Navigation property
-    [ForeignKey(nameof(UserId))] public virtual AuthUser User { get; set; } = null!;
+    [ForeignKey(nameof(UserId))] public virtual User User { get; set; } = null!;
 }
