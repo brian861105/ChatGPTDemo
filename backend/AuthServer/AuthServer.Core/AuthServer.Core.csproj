@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="DTOs\Responses\"/>
       <Folder Include="Interfaces\Cache\" />
       <Folder Include="Interfaces\Repositories\" />
       <Folder Include="Services\" />

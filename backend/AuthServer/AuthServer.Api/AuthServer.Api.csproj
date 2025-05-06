@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+      <ProjectReference Include="..\AuthServer.Core\AuthServer.Core.csproj"/>
   </ItemGroup>
 
 </Project>

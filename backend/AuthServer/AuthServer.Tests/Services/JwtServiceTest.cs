@@ -16,10 +16,12 @@ public class JwtServiceTest
     {
         _jwtSettings = new JwtSettings
         {
-            SecretKey = "876091d2b6de57771b1dec152da8d2867004922d2ac5c7bb6a76fb4443a9af5f",
+            AccessSecret = "876091d2b6de57771b1dec152da8d2867004922d2ac5c7bb6a76fb4443a9af5f",
+            RefreshSecret = "c2538c7b88b37166231f1ff8b815fb4f0b3cf242dc38dfbf77ba186e1e255640",
             Issuer = "TestIssuer",
             Audience = "TestAudience",
             ExpiryMinutes = 15,
+            RefreshTokenExpiryDays = 7,
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
@@ -45,15 +47,17 @@ public class JwtServiceTest
         );
 
         // Act
-        var token = _jwtService.GenerateToken(user);
+        var (acceToken, refreshToken) = _jwtService.GenerateTokens(user);
 
         // Assert
-        Assert.That(token, Is.Not.Null);
-        Assert.That(token, Is.Not.Empty);
+        Assert.That(acceToken, Is.Not.Null);
+        Assert.That(acceToken, Is.Not.Empty);
+        Assert.That(refreshToken, Is.Not.Null);
+        Assert.That(refreshToken, Is.Not.Empty);
     }
 
     [Test]
-    public void ValidateToken_ValidToken_ReturnsTrue()
+    public void ValidateAccessToken_ReturnsTrue()
     {
         // Arrange
         var user = new User
@@ -62,10 +66,10 @@ public class JwtServiceTest
             _passwordService.HashPassword("hashedpassword")
         );
 
-        var token = _jwtService.GenerateToken(user);
+        var (accessToken, refreshToken) = _jwtService.GenerateTokens(user);
 
         // Act
-        var isValid = _jwtService.ValidateToken(token);
+        var isValid = _jwtService.ValidateToken(accessToken);
 
         // Assert
         Assert.That(isValid, Is.True);
@@ -98,13 +102,63 @@ public class JwtServiceTest
             _passwordService.HashPassword("hashedpassword")
         );
 
-        var token = _jwtService.GenerateToken(user);
+        var (accessToken, refreshToken) = _jwtService.GenerateTokens(user);
 
         // Act
-        var isValid = _jwtService.ValidateToken(token);
+        var isValid = _jwtService.ValidateToken(accessToken);
 
         // Assert
-        Assert.IsFalse(isValid);
+        Assert.That(isValid, Is.False);
+    }
+
+    [Test]
+    public void FreshToken_ValidToken_ReturnsNewAccessToken()
+    {
+        // Arrange
+        var user = new User
+        (
+            "test@example.com",
+            _passwordService.HashPassword("hashedpassword")
+        );
+
+        var (_, refreshToken) = _jwtService.GenerateTokens(user);
+        var accessToken = _jwtService.FreshToken(refreshToken);
+
+        // Act
+        var isValid = _jwtService.ValidateToken(accessToken);
+
+        // Assert
+        Assert.That(isValid, Is.True);
+    }
+
+    [Test]
+    public void FreshToken_InvalidToken_ThrowsException()
+    {
+        // Arrange 
+        var invalidToken = "";
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => _jwtService.FreshToken(invalidToken));
+    }
+
+    [Test]
+    public void FreshToken_ExpiredToken_ThrowsException()
+    {
+        // Arrange
+        _jwtSettings.RefreshTokenExpiryDays = -1;
+        var options = Options.Create(_jwtSettings);
+        _jwtService = new JwtService(options);
+
+        var user = new User
+        (
+            "test@example.com",
+            _passwordService.HashPassword("hashedpassword")
+        );
+
+        var (_, refreshToken) = _jwtService.GenerateTokens(user);
+
+        // Act & Assert
+        Assert.Throws<SecurityTokenException>(() => _jwtService.FreshToken(refreshToken));
     }
 
     [Test]
@@ -116,10 +170,10 @@ public class JwtServiceTest
             "test@example.com",
             _passwordService.HashPassword("hashedpassword")
         );
-        var token = _jwtService.GenerateToken(user);
+        var (accessToken, refreshToken) = _jwtService.GenerateTokens(user);
 
         // Act
-        var principal = _jwtService.GetPrincipalFromToken(token);
+        var principal = _jwtService.GetPrincipalFromToken(accessToken);
 
         // Assert
         Assert.That(principal, Is.Not.Null);
@@ -130,7 +184,7 @@ public class JwtServiceTest
     public void GetPrincipalFromToken_InvalidToken_ThrowsException()
     {
         // Arrange
-        var invalidToken = "invalid.token.string";
+        const string invalidToken = "invalid.token.string";
 
         // Act & Assert
         Assert.Throws<SecurityTokenException>(() => _jwtService.GetPrincipalFromToken(invalidToken));
@@ -157,6 +211,6 @@ public class JwtServiceTest
     public void GenerateToken_NullUser_ThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => _jwtService.GenerateToken(null));
+        Assert.Throws<ArgumentNullException>(() => _jwtService.GenerateTokens(null));
     }
 }

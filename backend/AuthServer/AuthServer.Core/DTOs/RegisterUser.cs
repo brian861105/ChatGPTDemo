@@ -1,5 +1,5 @@
 namespace AuthServer.Core.DTOs;
 
-public class RefreshTokenRequest
+public class RegisterUser
 {
 }
